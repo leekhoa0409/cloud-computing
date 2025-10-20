@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Kết quả Compare Faces</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-5">
+  <h3 class="text-center mb-4">📊 Kết quả so sánh khuôn mặt</h3>
+
+  <div class="row mb-4">
+    <div class="col-md-6 text-center">
+      <img src="{{ url_for('static', filename='uploads/' + result.source) }}" class="img-fluid rounded shadow-sm">
+      <p class="fw-bold mt-2">Ảnh gốc</p>
+    </div>
+    <div class="col-md-6 text-center">
+      <img src="{{ url_for('static', filename='uploads/' + result.target) }}" class="img-fluid rounded shadow-sm">
+      <p class="fw-bold mt-2">Ảnh cần so sánh</p>
+    </div>
+  </div>
+
+  {% if result.matches and result.matches|length > 0 %}
+  <div class="alert alert-success text-center">
+    ✅ Tìm thấy {{ result.matches|length }} khuôn mặt trùng khớp!
+  </div>
+
+  <table class="table table-bordered text-center">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>Độ tương đồng (%)</th>
+        <th>Confidence</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for match in result.matches %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ match.Similarity | round(2) }}</td>
+        <td>{{ match.Face.Confidence | round(2) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="alert alert-danger text-center">
+    ❌ Không phát hiện khuôn mặt trùng khớp nào.
+  </div>
+  {% endif %}
+
+  <div class="text-center mt-4">
+    <a href="/" class="btn btn-outline-primary">🏠 Quay lại</a>
+  </div>
+</div>
+</body>
+</html>
