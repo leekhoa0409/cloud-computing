@@ -1,5 +1,4 @@
 (async function() {
-  while (!window.filename) await new Promise(r => setTimeout(r, 100));
   const filename = window.filename;
   const apiUrl = `/api/result/${filename}`;
 
@@ -135,11 +134,6 @@ function renderCompare(items) {
   return items.map((m,i)=>`<div class="border-bottom py-1"><strong>Match ${i+1}</strong> — Similarity: ${(m.Similarity||0).toFixed(1)}%</div>`).join('');
 }
 
-function renderPlotlyBar(containerId, labels, values) {
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  Plotly.newPlot(container, [{x: values, y: labels, type:'bar', orientation:'h'}], {margin:{l:150}}, {displayModeBar:false});
-}
 
 function drawAllBoundingBoxes(data) {
   const imgId = 'main-image';
