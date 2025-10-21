@@ -38,32 +38,32 @@
       <!-- RESULTS SECTION -->
       <div class="col-lg-7 col-md-12">
         <div id="labels-section" class="result-card">
-          <h5>🏷️ Detected Labels</h5>
+          <h5>Detected Labels</h5>
           <div class="content"></div>
         </div>
 
         <div id="faces-section" class="result-card">
-          <h5>😊 Detected Faces</h5>
+          <h5>Detected Faces</h5>
           <div class="content"></div>
         </div>
 
         <div id="celebrities-section" class="result-card">
-          <h5>🌟 Recognized Celebrities</h5>
+          <h5>Recognized Celebrities</h5>
           <div class="content"></div>
         </div>
 
         <div id="ppe-section" class="result-card">
-          <h5>🦺 PPE Detection</h5>
+          <h5>PPE Detection</h5>
           <div class="content"></div>
         </div>
 
         <div id="text-section" class="result-card">
-          <h5>🔠 Detected Text</h5>
+          <h5>Detected Text</h5>
           <div class="content"></div>
         </div>
 
         <div id="moderation-section" class="result-card">
-          <h5>⚠️ Moderation Labels</h5>
+          <h5>Moderation Labels</h5>
           <div class="content"></div>
         </div>
 
@@ -75,7 +75,6 @@
     </div>
   </div>
 
-  <!-- JS -->
   <script>
     window.filename = {{ filename|tojson }};
     window.selectedFeatures = {{ features|tojson if features is defined else "[]" }};

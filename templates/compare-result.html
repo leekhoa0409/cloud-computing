@@ -7,7 +7,7 @@
 </head>
 <body class="bg-light">
 <div class="container py-5">
-  <h3 class="text-center mb-4">📊 Kết quả so sánh khuôn mặt</h3>
+  <h3 class="text-center mb-4">Kết quả so sánh khuôn mặt</h3>
 
   <div class="row mb-4">
     <div class="col-md-6 text-center">
@@ -22,7 +22,7 @@
 
   {% if result.matches and result.matches|length > 0 %}
   <div class="alert alert-success text-center">
-    ✅ Tìm thấy {{ result.matches|length }} khuôn mặt trùng khớp!
+    Tìm thấy {{ result.matches|length }} khuôn mặt trùng khớp!
   </div>
 
   <table class="table table-bordered text-center">
@@ -45,12 +45,12 @@
   </table>
   {% else %}
   <div class="alert alert-danger text-center">
-    ❌ Không phát hiện khuôn mặt trùng khớp nào.
+    Không phát hiện khuôn mặt trùng khớp nào.
   </div>
   {% endif %}
 
   <div class="text-center mt-4">
-    <a href="/" class="btn btn-outline-primary">🏠 Quay lại</a>
+    <a href="/" class="btn btn-outline-primary">Quay lại</a>
   </div>
 </div>
 </body>

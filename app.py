@@ -76,9 +76,9 @@ def analyze_image():
 
     try:
         s3.upload_file(filepath, S3_BUCKET, filename)
-        print(f"✅ Uploaded to S3: s3://{S3_BUCKET}/{filename}")
+        print(f"Uploaded to S3: s3://{S3_BUCKET}/{filename}")
     except ClientError as e:
-        print(f"❌ S3 upload failed: {e}")
+        print(f"S3 upload failed: {e}")
         return f"S3 upload failed: {e}", 500
 
     img_bytes = resize_image_to_bytes(filepath)
@@ -105,13 +105,12 @@ def analyze_image():
         if "moderation" in features:
             results["moderation"] = rekognition.detect_moderation_labels(
                 Image={"Bytes": img_bytes},
-                MinConfidence=30  # thấp hơn để dễ bắt hình
+                MinConfidence=30
             ).get("ModerationLabels", [])   
     except Exception as e:
         logger.error(f"Rekognition error: {e}")
         results["error"] = str(e)
 
-    # Lưu kết quả JSON
     json_path = os.path.join(UPLOAD_FOLDER, f"{filename}.json")
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2)
@@ -164,7 +163,6 @@ def compare_inline():
             "unmatched": unmatched,
         }
 
-        # Lưu JSON để debug
         json_path = os.path.join(UPLOAD_FOLDER, f"compare_{uuid.uuid4().hex}.json")
         with open(json_path, "w", encoding="utf-8") as f:
             json.dump(result, f, indent=2)
@@ -175,14 +173,13 @@ def compare_inline():
         logger.error(f"CompareFaces error: {e}")
         return f"Lỗi khi gọi Rekognition: {e}", 500
 
-# --- Cleanup uploads ---
 def cleanup_uploads():
     if os.path.exists(UPLOAD_FOLDER):
         try:
             shutil.rmtree(UPLOAD_FOLDER)
-            print("✅ Upload folder cleaned.")
+            print("Upload folder cleaned.")
         except Exception as e:
-            print("⚠️ Cleanup failed:", e)
+            print("Cleanup failed:", e)
 
 atexit.register(cleanup_uploads)
 signal.signal(signal.SIGINT, lambda s, f: sys.exit(0))

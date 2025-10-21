@@ -37,7 +37,7 @@
     console.error(err);
     document.querySelector(".col-lg-7").innerHTML = `
       <div class="alert alert-danger mt-3">
-        ❌ Lỗi khi tải kết quả: ${escapeHtml(err.message)}
+        Lỗi khi tải kết quả: ${escapeHtml(err.message)}
       </div>`;
   }
 })();
