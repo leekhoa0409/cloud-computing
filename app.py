@@ -6,10 +6,8 @@ from PIL import Image
 import boto3
 from botocore.exceptions import ClientError
 
-# --- Load env ---
 load_dotenv()
 
-# --- Config ---
 UPLOAD_FOLDER = "static/uploads"
 S3_BUCKET = os.getenv("S3_BUCKET")
 
@@ -20,12 +18,10 @@ DEBUG_SAVE_JSON = True
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("rekognition-app")
 
-# --- Flask app ---
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# --- AWS Rekognition setup ---
 rekognition = boto3.client(
     "rekognition",
     aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
@@ -41,12 +37,10 @@ s3 = boto3.client('s3',
     region_name=os.getenv("AWS_REGION")
 )
 
-# --- Helpers ---
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def resize_image_to_bytes(path):
-    """Resize lớn nhất 1600px và trả về bytes JPEG"""
     with Image.open(path) as im:
         w, h = im.size
         max_side = max(w, h)
@@ -57,7 +51,6 @@ def resize_image_to_bytes(path):
         im.convert("RGB").save(buf, format="JPEG", quality=85)
         return buf.getvalue()
 
-# --- Routes ---
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -84,8 +77,6 @@ def analyze_image():
     img_bytes = resize_image_to_bytes(filepath)
 
     results = {}
-
-    # Gọi AWS tùy theo feature
     try:
         if "labels" in features:
             results["labels"] = rekognition.detect_labels(Image={"Bytes": img_bytes}).get("Labels", [])
@@ -127,7 +118,6 @@ def api_result(filename):
 
 @app.route("/compare-faces", methods=["POST"])
 def compare_inline():
-    """So sánh khuôn mặt - cùng trang index"""
     source_file = request.files.get("source")
     target_file = request.files.get("target")
 

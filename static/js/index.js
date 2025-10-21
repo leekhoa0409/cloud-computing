@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const compareFile = document.getElementById("compare-file");
   const comparePreview = document.getElementById("compare-preview");
 
-  // --- Hiển thị preview ảnh chính ---
   fileInput.addEventListener("change", (e) => {
     preview.innerHTML = "";
     const f = e.target.files[0];
@@ -14,7 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
     img.src = URL.createObjectURL(f);
     preview.appendChild(img);
   });
-  // --- Hiển thị preview ảnh so sánh ---
+
+
   compareFile.addEventListener("change", (e) => {
     comparePreview.innerHTML = "";
     const f = e.target.files[0];

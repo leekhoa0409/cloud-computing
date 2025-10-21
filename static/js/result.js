@@ -1,6 +1,4 @@
-// ------------------ main async ------------------
 (async function() {
-  // --- Wait for filename ---
   while (!window.filename) await new Promise(r => setTimeout(r, 100));
   const filename = window.filename;
   const apiUrl = `/api/result/${filename}`;
@@ -11,7 +9,6 @@
     const data = await resp.json();
     window.rekognitionData = data;
 
-    // Map sections to keys & renderer
     const sections = {
       labels: {keys:['labels','Labels'], render: renderLabels, emptyMsg: "Không phát hiện được nhãn đối tượng nào trong ảnh."},
       faces: {keys:['faces','Faces','FaceDetails'], render: renderFaces, emptyMsg: "Không phát hiện được khuôn mặt nào."},
@@ -28,7 +25,6 @@
       renderSectionKeep(`${sec}-section`, arr, cfg.render, errMsg, cfg.emptyMsg);
     }
 
-    // Vẽ tất cả bounding boxes
     drawAllBoundingBoxes(data);
 
     document.dispatchEvent(new Event("rekognitionDataReady"));
@@ -42,7 +38,7 @@
   }
 })();
 
-// ------------------ helpers ------------------
+
 function pickFirstArray(obj, keys) {
   for (const k of keys) {
     if (!obj) continue;
@@ -60,12 +56,12 @@ function renderSectionKeep(sectionId, dataArray, renderFn, errorMsg, emptyMessag
   section.style.display = 'block';
 
   if (errorMsg) {
-    content.innerHTML = `<div class="text-danger">⚠️ Lỗi: ${escapeHtml(String(errorMsg))}</div>`;
+    content.innerHTML = `<div class="text-danger">Lỗi: ${escapeHtml(String(errorMsg))}</div>`;
     return;
   }
 
   if (!dataArray || dataArray.length === 0) {
-    content.innerHTML = `<div class="text-muted fst-italic">⚠️ ${emptyMessage}</div>`;
+    content.innerHTML = `<div class="text-muted fst-italic">${emptyMessage}</div>`;
     return;
   }
 
@@ -78,7 +74,7 @@ function escapeHtml(str) {
   })[s]);
 }
 
-// ------------------ renderers ------------------
+
 function renderLabels(labels) {
   setTimeout(() => {
     const names = labels.slice(0,10).map(l => l.Name);
@@ -114,11 +110,13 @@ function renderCelebrities(items) {
 }
 
 function renderPPE(persons) {
-  return persons.map((p,i)=>{
-    const parts = (p.BodyParts||[]).flatMap(pt => 
-      (pt.EquipmentDetections||[]).map(eq => `${pt.Name}: ${eq.Type} - ${(eq.CoversBodyPart?'✅':'❌')}`)
+  return persons.map((p, i) => {
+    const parts = (p.BodyParts || []).flatMap(pt =>
+      (pt.EquipmentDetections || []).map(eq => 
+        `${pt.Name}: ${eq.Type} - ${eq.CoversBodyPart ? 'Có che phủ' : 'Không che phủ'}`
+      )
     );
-    return `<div class="border-bottom py-2"><strong>Người ${i+1}</strong><div>${parts.join('<br>')}</div></div>`;
+    return `<div class="border-bottom py-2"><strong>Người ${i + 1}</strong><div>${parts.join('<br>')}</div></div>`;
   }).join('');
 }
 
@@ -133,26 +131,22 @@ function renderModeration(items) {
 }
 
 function renderCompare(items) {
-  if (!items || !items.length) return '<div class="text-muted">⚠️ Không tìm thấy khuôn mặt trùng khớp nào.</div>';
+  if (!items || !items.length) return '<div class="text-muted">Không tìm thấy khuôn mặt trùng khớp nào.</div>';
   return items.map((m,i)=>`<div class="border-bottom py-1"><strong>Match ${i+1}</strong> — Similarity: ${(m.Similarity||0).toFixed(1)}%</div>`).join('');
 }
 
-// ------------------ Plotly bar helper ------------------
 function renderPlotlyBar(containerId, labels, values) {
   const container = document.getElementById(containerId);
   if (!container) return;
   Plotly.newPlot(container, [{x: values, y: labels, type:'bar', orientation:'h'}], {margin:{l:150}}, {displayModeBar:false});
 }
 
-// ------------------ draw bounding boxes ------------------
 function drawAllBoundingBoxes(data) {
   const imgId = 'main-image';
   const boxes = [];
 
-  // Faces
   if (data.faces) boxes.push(...data.faces.map(f => ({...f.BoundingBox, color:'lime'})).filter(Boolean));
 
-  // PPE
   if (data.ppe) {
     const ppeBoxes = data.ppe.flatMap(p =>
       (p.BodyParts||[]).flatMap(pt => (pt.EquipmentDetections||[]).map(eq => ({...eq.BoundingBox, color:'orange'})))
@@ -160,10 +154,8 @@ function drawAllBoundingBoxes(data) {
     boxes.push(...ppeBoxes);
   }
 
-  // Celebrities
   if (data.celebrities) boxes.push(...data.celebrities.map(c => ({...c.BoundingBox, color:'gold'})).filter(Boolean));
 
-  // Labels (Instances)
   if (data.labels) {
     data.labels.forEach(label => {
       if (label.Instances && label.Instances.length) {
@@ -172,7 +164,6 @@ function drawAllBoundingBoxes(data) {
     });
   }
 
-  // Text
   if (data.text) {
     data.text.forEach(t => {
       if (t.Geometry && t.Geometry.BoundingBox) {

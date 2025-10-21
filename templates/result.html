@@ -3,29 +3,20 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Rekognition Result</title>
-
-  <!-- Bootstrap -->
+  <title>Kết quả phân tích</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- Custom CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/result.css') }}">
-
-  <!-- Plotly -->
   <script src="https://cdn.plot.ly/plotly-2.20.0.min.js"></script>
 </head>
 
 <body>
-  <!-- HEADER -->
   <header>
-    <h2 class="mb-2">🔍 Analysis Result: {{ filename }}</h2>
-    <a href="/" class="text-light">← Analyze another image</a>
+    <h2 class="mb-2">Kết quả phân tích: {{ filename }}</h2>
+    <a href="/" class="text-light">← Phân tích ảnh khác</a>
   </header>
-
-  <!-- MAIN -->
   <div class="container main-container">
     <div class="row g-4">
-      <!-- IMAGE SECTION -->
+
       <div class="col-lg-5 col-md-12">
         <div id="image-container">
           <img id="main-image"
@@ -35,7 +26,6 @@
         </div>
       </div>
 
-      <!-- RESULTS SECTION -->
       <div class="col-lg-7 col-md-12">
         <div id="labels-section" class="result-card">
           <h5>Detected Labels</h5>
@@ -68,7 +58,7 @@
         </div>
 
         <div id="compare-section" class="result-card">
-          <h5>🧍‍♂️ Compare Faces Result</h5>
+          <h5>Compare Faces Result</h5>
           <div class="content"></div>
         </div>
       </div>
@@ -92,7 +82,7 @@
       if (selected.length === 0) {
         const alert = document.createElement("div");
         alert.className = "no-feature-alert";
-        alert.innerHTML = "⚠️ No features selected. Please go back and choose one.";
+        alert.innerHTML = "No features selected. Please go back and choose one.";
         document.querySelector(".col-lg-7").prepend(alert);
       }
     });
